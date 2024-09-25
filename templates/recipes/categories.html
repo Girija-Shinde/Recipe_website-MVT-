@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block start %}
+<div class="container mt-4">
+    <h2>Categories</h2>
+    <form class="d-flex mb-4" method="GET" action="{% url 'list_categories' %}">
+        <input class="form-control me-2" type="search" placeholder="Search categories..." name="search" >
+        <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+
+    {% if categories %}
+        <div class="row">
+            {% for category in categories %}
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <a href="{% url 'category_recipes' category.id %}">
+                        <img src="{{ category.category_image.url }}" class="card-img-top" alt="{{ category.name }}" style="height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">{{ category.name }}</h5>
+                        </div>
+                    </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center">No categories match your search.</p>
+    {% endif %}
+</div>
+{% endblock %}

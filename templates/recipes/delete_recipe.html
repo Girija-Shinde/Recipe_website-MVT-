@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block start %}
+<div class="container mt-5">
+    <h2>Delete Recipe</h2>
+    <div class="alert alert-danger" role="alert">
+        Are you sure you want to delete the recipe "{{ recipe.recipe_name }}"?
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Yes, delete</button>
+        <a href="{% url 'my_recipes' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

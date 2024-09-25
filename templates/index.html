@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block start %}
+<div class="container mt-5">
+    <!-- Featured Section -->
+    <div class="text-center mb-4">
+        <h2>Welcome to RecipeWebsite</h2>
+        <p>Discover new recipes and categories</p>
+    </div>
+
+    <!-- Add Recipe Button -->
+    {% if request.user.is_authenticated %}
+        <div class="d-flex justify-content-end mb-4">
+            <a href="{% url 'add_recipe' %}" class="btn btn-primary">Add Recipe</a>
+        </div>
+    {% endif %}
+
+    <!-- Random Recipes Carousel -->
+    <div class="mb-5">
+        <div id="randomRecipesCarousel" class="carousel slide">
+            <div class="carousel-inner">
+                {% for recipe in random_recipes %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <a href="{% url 'recipe_detail' recipe.id %}">
+                            <img src="{{ recipe.recipe_image.url }}" class="d-block w-100" alt="{{ recipe.recipe_name }}" style="height: 400px; object-fit: cover;">
+                        </a>
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>{{ recipe.recipe_name }}</h5>
+                            <p>{{ recipe.recipe_description|truncatewords:20 }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#randomRecipesCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#randomRecipesCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Categories Carousel -->
+    <div class="mb-5">
+        <h3 class="mb-4">Categories</h3>
+        <div id="categoriesCarousel" class="carousel slide">
+            <div class="carousel-inner">
+                {% for category_chunk in chunked_categories %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <div class="row">
+                            {% for category in category_chunk %}
+                                <div class="col-md-4 mb-4">
+                                    <div class="card shadow-sm">
+                                        <a href="{% url 'category_recipes' category.id %}">
+                                            <img src="{{ category.category_image.url }}" class="card-img-top" alt="{{ category.name }}" style="height: 200px; object-fit: cover;">
+                                        </a>
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ category.name }}</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#categoriesCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#categoriesCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Recent Recipes Grid -->
+    <div class="mb-5">
+        <h3 class="mb-4">Recently Added Recipes</h3>
+        <div class="row">
+            {% for recipe in recent_recipes %}
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm">
+                        <a href="{% url 'recipe_detail' recipe.id %}">
+                            <img src="{{ recipe.recipe_image.url }}" class="card-img-top" alt="{{ recipe.recipe_name }}" style="height: 200px; object-fit: cover;">
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ recipe.recipe_name }}</h5>
+                            <p class="card-text">{{ recipe.recipe_description|truncatewords:20 }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

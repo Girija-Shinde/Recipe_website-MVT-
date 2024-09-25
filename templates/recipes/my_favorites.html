@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block start %}
+<div class="container mt-5">
+  <h1 class="my-4">My Favorite Recipes</h1>
+
+  {% if page_obj %}
+    <div class="row">
+      {% for recipe in page_obj %}
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm">
+            <!-- Recipe Image -->
+            <img src="{{ recipe.recipe_image.url }}" class="card-img-top" alt="{{ recipe.recipe_name }}" style="height: 200px; object-fit: cover;">
+
+            <div class="card-body d-flex flex-column">
+              <!-- Recipe Name -->
+              <h5 class="card-title">{{ recipe.recipe_name }}</h5>
+              
+              <!-- Recipe Description -->
+              <p class="card-text mb-3">{{ recipe.recipe_description|slice:":150" }}{% if recipe.recipe_description|length > 150 %}...{% endif %}</p>
+              
+              <!-- Buttons -->
+              <div class="mt-auto">
+                <a href="{% url 'recipe_detail' recipe.id %}" class="btn btn-primary w-100 mb-2">
+                  <i class="fas fa-eye"></i> View Recipe
+                </a>
+                <a href="{% url 'remove_favorite' recipe.id %}" class="btn btn-danger w-100">
+                  <i class="fas fa-heart-broken"></i> Remove from Favorites
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    
+    <!-- Pagination controls -->
+    <div class="d-flex justify-content-between align-items-center mt-4">
+      <div class="pagination">
+        <span class="step-links">
+          {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; First</a>
+            <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+          {% endif %}
+
+          <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+          </span>
+
+          {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+          {% endif %}
+        </span>
+      </div>
+    </div>
+  {% else %}
+    <p class="text-center">You have no favorite recipes yet.</p>
+  {% endif %}
+
+  <div class="text-center mt-4">
+    <a href="{% url 'all_recipes' %}" class="btn btn-secondary">
+      <i class="fas fa-arrow-left"></i> Back to All Recipes
+    </a>
+  </div>
+</div>
+{% endblock %}
